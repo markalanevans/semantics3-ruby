@@ -17,15 +17,12 @@ module Semantics3
 
     class Base
         attr_accessor :debug, :log
-        
+
         def initialize(api_key,api_secret)
             
             @api_key = api_key
             @api_secret = api_secret
-            @debug = false
             @log = 'nil'
-
-
             raise Error.new('API Credentials Missing','You did not supply an api_key. Please sign up at https://semantics3.com/ to obtain your api_key.','api_key') if api_key == ''
             raise Error.new('API Credentials Missing','You did not supply an api_secret. Please sign up at https://semantics3.com/ to obtain your api_secret.','api_secret') if api_secret == ''
 
@@ -48,7 +45,7 @@ module Semantics3
             #puts "url = #{url}"
             response = @auth.get(url)
 
-            if(@debug == true)
+            if(@log)
                 @log.debug(response.to_s)
             end
 
