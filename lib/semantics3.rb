@@ -10,14 +10,19 @@ require 'oauth'
 require 'uri'
 require 'cgi'
 require 'json'
+require 'logger'
 
 module Semantics3
     @auth={}
 
     class Base
         def initialize(api_key,api_secret)
+            attr_accessor :debug, :log
             @api_key = api_key
             @api_secret = api_secret
+            @debug = false
+            @log = 'nil'
+
 
             raise Error.new('API Credentials Missing','You did not supply an api_key. Please sign up at https://semantics3.com/ to obtain your api_key.','api_key') if api_key == ''
             raise Error.new('API Credentials Missing','You did not supply an api_secret. Please sign up at https://semantics3.com/ to obtain your api_secret.','api_secret') if api_secret == ''
@@ -25,6 +30,12 @@ module Semantics3
             consumer = OAuth::Consumer.new(@api_key, @api_secret)
             @auth = OAuth::AccessToken.new(consumer)
         end
+
+        def enable_logging file = 'semantics3.log', level = Logger::INFO
+            @log = Logger.new(file)
+            @log.level = level
+        end
+
 
         private
 
@@ -34,6 +45,10 @@ module Semantics3
 
             #puts "url = #{url}"
             response = @auth.get(url)
+
+            if(@debug == true)
+                @log.debug(response.to_s)
+            end
 
             #-- Response.code - TBD
             JSON.parse response.body
