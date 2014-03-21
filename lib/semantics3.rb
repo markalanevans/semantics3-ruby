@@ -16,8 +16,10 @@ module Semantics3
     @auth={}
 
     class Base
+        attr_accessor :debug, :log
+        
         def initialize(api_key,api_secret)
-            attr_accessor :debug, :log
+            
             @api_key = api_key
             @api_secret = api_secret
             @debug = false
